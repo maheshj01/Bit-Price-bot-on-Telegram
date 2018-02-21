@@ -1,9 +1,9 @@
 import telebot
-import time
 import requests
+import time
 import json
 
-bot_token = '<Token here>'
+bot_token = '477501756:AAFkPGmVOewzI_Ruh7i44g9IPeFBhetXX00'
 api_url = "https://api.telegram.org/bot{}/".format(bot_token)
 
 bot=telebot.TeleBot(token=bot_token)
@@ -17,8 +17,27 @@ def send_welcome(message):
 @bot.message_handler(commands=['help'])
 def send_help(message):
     username=message.from_user.first_name
-    help="Hi " + username + " ! this bot sends you crypto market stats such as \nlast price,High,Low,Volume \nsend me a crypto pair \ne.g btc-eth"
+    help="Hi " + username + " ! \nthis bot sends you crypto market stats from various exchanges.\nBittrex\nto get altcoin stats from bittrex send a crypto pair e.g btc-eth \n "
+    help=help + "\nZebpay\nto get price of btc,ltc,bch,xrp from zebpay in inr  send \n/zebpay btc \n/zebpay ltc \n/zebpay bch\n/zebpay xrp"
     bot.send_message(message.chat.id,help)
+
+@bot.message_handler(commands=['zebpay'])
+def compare_price(message):
+    url = "https://www.zebapi.com/api/v1/market/ticker-new/"
+    try:
+        currency=message.text.strip("/zebpay")
+        currency=currency.strip()
+        if len(currency) !=0:
+            url=url + currency + "/inr"
+            response = requests.get(url)
+            zebticker ="buy price:" + str(response.json()['buy'])+ " inr" +"\nsell price:" + str(response.json()['sell'])
+            zebticker=zebticker + " inr" + "\nVolume:" + str(response.json()['volume'])+currency
+            bot.send_message(message.chat.id,zebticker)
+        else:
+            bot.send_message(message.chat.id,"please follow the format \n e.g /zebpay ltc \n or try using /help")
+    except Exception:
+        print(Exception)
+        bot.send_message(message.chat.id,"invalid currency,\nplease try /help")
 
 @bot.message_handler(content_types =['text'])
 def price(message):
@@ -31,18 +50,15 @@ def price(message):
     try:
         response = requests.get(url).json()
         if(response["success"]==True):
-            print "success:true"
-            text="Last Price:" + str(response["result"][0]['Last']) + "\nHigh:" + str(response["result"][0]['High']) +"\nLow:" + str(response["result"][0]['Low']) + "\nVolume:" + str(response["result"][0]['Volume'])
+            text="Last Price:" + str(response["result"][0]['Last']) +" "+ str(coin[0]) + "\nHigh:" + str(response["result"][0]['High']) +"\nLow:" + str(response["result"][0]['Low']) + "\nVolume:" + str(response["result"][0]['Volume'])
             bot.send_message(chatid,text)
         else:
             print "success:false"
             text="Invalid pair entered,please try again! or use /help"
             bot.send_message(chatid,text)
-        print("response sent")
     except Exception:
         print(Exception)
         print("your internet is broken :( please try again!")
-
 
 
 while True:
