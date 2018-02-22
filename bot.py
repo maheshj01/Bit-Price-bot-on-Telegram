@@ -50,7 +50,7 @@ def price(message):
     try:
         response = requests.get(url).json()
         if(response["success"]==True):
-            text="*#"+str(coin[1].upper())+ "*" +"\n*Last Price:* "+"_"+str(response["result"][0]['Last'])+"_ " + str(coin[0]) + "*\nHigh:* _" + str(response["result"][0]['High']) +"_ *\nLow:* _" + str(response["result"][0]['Low']) + "_ *\nVolume:* _" + str(response["result"][0]['Volume']) +"_"
+            text="#"+str(coin[1].upper())+"\n*Last Price:* "+"_"+str(response["result"][0]['Last'])+"_ " + str(coin[0]) + "*\nHigh:* _" + str(response["result"][0]['High']) +"_ *\nLow:* _" + str(response["result"][0]['Low']) + "_ *\nVolume:* _" + str(response["result"][0]['Volume']) +"_"
             bot.send_message(chatid,text,parse_mode='Markdown')
         else:
             print "success:false"
