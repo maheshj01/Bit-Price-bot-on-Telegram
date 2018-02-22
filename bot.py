@@ -3,7 +3,7 @@ import requests
 import time
 import json
 
-bot_token = '<bot tomen>'
+bot_token = '<bot token>'
 api_url = "https://api.telegram.org/bot{}/".format(bot_token)
 
 bot=telebot.TeleBot(token=bot_token)
@@ -11,15 +11,15 @@ bot=telebot.TeleBot(token=bot_token)
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     username=message.from_user.first_name
-    welcome="Hello " + username + " Welcome to bittrex price bot, this bot gives the price of cryptocurrency pair from bittrex in real time,try sending me a valid pair e.g btc-ltc\n incase you need /help "
-    bot.send_message(message.chat.id,welcome)
+    welcome="Hello *" + username + "*!\n_Welcome to bittrex price bot, this bot gives the price of cryptocurrency pair from bittrex in real time,try sending me a valid pair e.g btc-ltc_\n /help *incase you need help* "
+    bot.send_message(message.chat.id,welcome,parse_mode='Markdown')
 
 @bot.message_handler(commands=['help'])
 def send_help(message):
     username=message.from_user.first_name
-    help="Hi " + username + " ! \nthis bot sends you crypto market stats from various exchanges.\nBittrex\nto get altcoin stats from bittrex send a crypto pair e.g btc-eth \n "
-    help=help + "\nZebpay\nto get price of btc,ltc,bch,xrp from zebpay in inr  send \n/zebpay btc \n/zebpay ltc \n/zebpay bch\n/zebpay xrp"
-    bot.send_message(message.chat.id,help)
+    help="Hi *" + username + "* ! \nthis bot sends you crypto market stats from various exchanges.\n*#BITTREX* _\nto get altcoin stats from bittrex send a crypto pair_ *e.g btc-eth* \n "
+    help=help + "*\n#ZEBPAY* _\nto get price of_ * btc,ltc,bch,xrp* _from zebpay in inr send_ \n/zebpay btc \n/zebpay ltc \n/zebpay bch\n/zebpay xrp"
+    bot.send_message(message.chat.id,help,parse_mode='Markdown')
 
 @bot.message_handler(commands=['zebpay'])
 def compare_price(message):
@@ -30,14 +30,14 @@ def compare_price(message):
         if len(currency) !=0:
             url=url + currency + "/inr"
             response = requests.get(url)
-            zebticker ="buy price:" + str(response.json()['buy'])+ " inr" +"\nsell price:" + str(response.json()['sell'])
-            zebticker=zebticker + " inr" + "\nVolume:" + str(response.json()['volume'])+currency
-            bot.send_message(message.chat.id,zebticker)
+            zebticker ="*buy price:* " + "_"+str(response.json()['buy'])+"_"+ " inr" +"*\nsell price:* " + "_" + str(response.json()['sell'])+ "_"
+            zebticker=zebticker + " inr" + "*\nVolume:* " + "_" + str(response.json()['volume'])+"_"+currency
+            bot.send_message(message.chat.id,zebticker,parse_mode='Markdown')
         else:
-            bot.send_message(message.chat.id,"please follow the format \n e.g /zebpay ltc \n or try using /help")
+            bot.send_message(message.chat.id,"_please follow the format_ \n e.g /zebpay ltc\n _or try using_ /help",parse_mode='Markdown')
     except Exception:
         print(Exception)
-        bot.send_message(message.chat.id,"invalid currency,\nplease try /help")
+        bot.send_message(message.chat.id,"*invalid currency*,\nplease try /help",parse_mode='Markdown')
 
 @bot.message_handler(content_types =['text'])
 def price(message):
@@ -50,12 +50,12 @@ def price(message):
     try:
         response = requests.get(url).json()
         if(response["success"]==True):
-            text="Last Price:" + str(response["result"][0]['Last']) +" "+ str(coin[0]) + "\nHigh:" + str(response["result"][0]['High']) +"\nLow:" + str(response["result"][0]['Low']) + "\nVolume:" + str(response["result"][0]['Volume'])
-            bot.send_message(chatid,text)
+            text="*#"+str(coin[1].upper())+ "*" +"\n*Last Price:* "+"_"+str(response["result"][0]['Last'])+"_ " + str(coin[0]) + "*\nHigh:* _" + str(response["result"][0]['High']) +"_ *\nLow:* _" + str(response["result"][0]['Low']) + "_ *\nVolume:* _" + str(response["result"][0]['Volume']) +"_"
+            bot.send_message(chatid,text,parse_mode='Markdown')
         else:
             print "success:false"
             text="Invalid pair entered,please try again! or use /help"
-            bot.send_message(chatid,text)
+            bot.send_message(chatid,text,parse_mode='Markdown')
     except Exception:
         print(Exception)
         print("your internet is broken :( please try again!")
