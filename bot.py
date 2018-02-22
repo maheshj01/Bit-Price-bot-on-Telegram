@@ -3,7 +3,7 @@ import requests
 import time
 import json
 
-bot_token = '477501756:AAFkPGmVOewzI_Ruh7i44g9IPeFBhetXX00'
+bot_token = '<bot tomen>'
 api_url = "https://api.telegram.org/bot{}/".format(bot_token)
 
 bot=telebot.TeleBot(token=bot_token)
