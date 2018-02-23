@@ -18,7 +18,7 @@ def send_welcome(message):
 def send_help(message):
     username=message.from_user.first_name
     help="Hi *" + username + "* ! \nthis bot sends you crypto market stats from various exchanges.\n*#BITTREX* _\nto get altcoin stats from bittrex send a crypto pair_ *e.g btc-eth* \n "
-    help=help + "*\n#ZEBPAY* _\nto get price of_ * btc,ltc,bch,xrp* _from zebpay in inr send_ \n/zebpay btc \n/zebpay ltc \n/zebpay bch\n/zebpay xrp"
+    help=help + "*\n#ZEBPAY* _\nto get price of_ * btc,ltc,bch,xrp,eth* _from zebpay in inr send_ \n/zebpay btc \n/zebpay ltc \n/zebpay bch\n/zebpay xrp\n/zebpay eth"
     bot.send_message(message.chat.id,help,parse_mode='Markdown')
 
 @bot.message_handler(commands=['zebpay'])
@@ -50,7 +50,7 @@ def price(message):
     try:
         response = requests.get(url).json()
         if(response["success"]==True):
-            text="#"+str(coin[1].upper())+"\n*Last Price:* "+"_"+str(response["result"][0]['Last'])+"_ " + str(coin[0]) + "*\nHigh:* _" + str(response["result"][0]['High']) +"_ *\nLow:* _" + str(response["result"][0]['Low']) + "_ *\nVolume:* _" + str(response["result"][0]['Volume']) +"_"
+            text="#"+str(coin[1].upper()) +"\n*Last Price:* "+"_"+str(response["result"][0]['Last'])+"_ " + str(coin[0]) + "*\nHigh:* _" + str(response["result"][0]['High']) +"_ *\nLow:* _" + str(response["result"][0]['Low']) + "_ *\nVolume:* _" + str(response["result"][0]['Volume']) +"_"
             bot.send_message(chatid,text,parse_mode='Markdown')
         else:
             print "success:false"
