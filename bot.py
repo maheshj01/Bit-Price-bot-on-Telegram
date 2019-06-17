@@ -2,14 +2,10 @@ import telebot
 import requests
 import time
 import json
-from flask import Flask
-import os
-
 
 bot_token = '477501756:AAFW8vtaZyVe3qF9r-YJqWLFax_ru33-XCM'
 api_url = "https://api.telegram.org/bot{}/".format(bot_token)
 bot=telebot.TeleBot(token = bot_token)
-server = Flask(__name__)
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -64,16 +60,11 @@ def price(message):
         print("your internet is broken :( please try again!")
 
 
-@server.route("/")
-def webhook():
-    bot.remove_webhook()
-    bot.set_webhook(url='https://kryptobot-telegram.herokuapp.com/' + bot_token)
-    return "!", 200
-
-
-if __name__ == "__main__":
-    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
-
+while True:
+    try:
+    	bot.polling()
+    except Exception:
+        time.sleep(10)
 
 
 
