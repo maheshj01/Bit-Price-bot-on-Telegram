@@ -6,10 +6,10 @@ from flask import Flask
 import os
 
 
-bot_token = ''
+bot_token = '477501756:AAFW8vtaZyVe3qF9r-YJqWLFax_ru33-XCM'
 api_url = "https://api.telegram.org/bot{}/".format(bot_token)
 bot=telebot.TeleBot(token = bot_token)
-server = Flask(__name__)
+# server = Flask(__name__)
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -63,6 +63,12 @@ def price(message):
         print(Exception)
         print("your internet is broken :( please try again!")
 
+print("bot started...")
+while True:
+    try:
+        bot.polling()
+    except Exception:
+        time.sleep(10)
 
 @server.route("/")
 def webhook():
@@ -88,21 +94,6 @@ if __name__ == "__main__":
 
 
 
-
-
-# import telebot
-
-# bot = telebot.TeleBot("477501756:AAFW8vtaZyVe3qF9r-YJqWLFax_ru33-XCM")
-
-# @bot.message_handler(commands=['start', 'help'])
-# def send_welcome(message):
-# 	bot.reply_to(message, "Howdy, how are you doing?")
-
-# @bot.message_handler(func=lambda message: True)
-# def echo_all(message):
-# 	bot.reply_to(message, message.text)
-
-# bot.polling()
 
 
 
